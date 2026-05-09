@@ -34,7 +34,7 @@ namespace Virtuelizacija_Projekat.Common
 
         public void PrintAvailableFiles() 
         {
-            Console.WriteLine("Dostupni fajlovi: \n");
+            Console.WriteLine("Available files: \n");
 
             for (int i = 0; i < Files.Length; i++)
             {

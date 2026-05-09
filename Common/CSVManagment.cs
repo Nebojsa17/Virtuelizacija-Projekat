@@ -13,11 +13,13 @@ namespace Virtuelizacija_Projekat.Common
     {
         string path;
         int maxRows;
+        private Logger logger;
 
-        public CSVManagment(string path, int rows) 
+        public CSVManagment(string path, int rows, Logger log) 
         {
             this.path = path;
             this.maxRows = rows;
+            this.logger = log;
         }
 
         public void Obradi() 
@@ -31,22 +33,20 @@ namespace Virtuelizacija_Projekat.Common
                 if (rows > maxRows) break;
 
                 if (string.IsNullOrWhiteSpace(line))
-                    //empty line counts as bad
+                {   
+                    logger.Log($"row {rows,-4} in file {path,-20} is not in valid format");
                     continue;
-
+                }
                 try 
                 {
                     DronInfo row = new DronInfo(line);
-                    Console.WriteLine($"line {rows-1} - {row.Time}");
+                    Console.WriteLine($"loaded row {rows-1} - {row.Time}");
                 }
                 catch (Exception ex)
                 {
                     //los formatiran red !!!!
-                    Console.WriteLine("Ne ispravan red :(\nGreska: "+ex.Message);
+                    logger.Log($"row {rows,-4} in file {path,-20} is not valid. Recieved error: {ex}");
                 }
-
-
-                //Console.WriteLine($"\t{line}");
             }
         }
     }

@@ -5,18 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using Virtuelizacija_Projekat.Common;
+using System.ServiceModel;
 
 namespace Drone_Client
 {
     internal class Program
     {
         private static FileMenagment files;
+        private static Logger logger;
 
         static void Main(string[] args)
         {
-            string path = ConfigurationManager.AppSettings["flightDirectory"];
+            //veza sa servisom
+            ChannelFactory<IDroneService> factory = new ChannelFactory<IDroneService>("DroneService");
+            IDroneService proxy = factory.CreateChannel();
 
-            files = new FileMenagment(path);
+            //ucitavanje iz appconfig
+            string flightsPath = ConfigurationManager.AppSettings["flightDirectory"];
+            string loggerPath = ConfigurationManager.AppSettings["logDirectory"];
+            int maxRows = Int32.Parse(ConfigurationManager.AppSettings["rowRead"]);
+
+            //objekti potrebni za rad
+            logger = new Logger(loggerPath);
+            files = new FileMenagment(flightsPath);
 
             int menuRespone = 0;
 
@@ -32,7 +43,7 @@ namespace Drone_Client
                         Console.ReadKey();
                         break;
                     case 2:
-                        CSVManagment csvManager = new CSVManagment(files.Files[0], Int32.Parse(ConfigurationManager.AppSettings["rowRead"]));
+                        CSVManagment csvManager = new CSVManagment(files.Files[0], maxRows,logger);
 
                         csvManager.Obradi();
 
@@ -51,8 +62,8 @@ namespace Drone_Client
             {
                 Console.Clear();
                 Console.WriteLine("\t\tDrone Delivery\n" +
-                    "\n1 - Svi dostupni fajlovi" +
-                    "\n2 - Posajli file (indx)" +
+                    "\n1 - All files" +
+                    "\n2 - Send file for processing" +
                     "\n3 - Exit");
                 try 
                 {

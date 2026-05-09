@@ -49,6 +49,7 @@
     <Compile Include="DronInfo.cs" />
     <Compile Include="FileMenagment.cs" />
     <Compile Include="IDroneService.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MetaHeader.cs" />
     <Compile Include="ProgressEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
