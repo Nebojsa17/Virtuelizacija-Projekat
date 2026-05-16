@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Virtuelizacija_Projekat.Common
+namespace Common
 {
     [ServiceContract]
     public interface IDroneService
@@ -14,7 +14,7 @@ namespace Virtuelizacija_Projekat.Common
         ConfirmationEnum StartSession(MetaHeader meta);
 
         [OperationContract]
-        // fali [FaultContract(typeof(XXXXXXXXXX))] ali sam greske ostavila za kasnije kada budemo radili implementaciju
+        [FaultContract(typeof(SampleError))]
         ProgressEnum PushSample(Sample sample);
 
         [OperationContract]

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Virtuelizacija_Projekat.Common
+namespace Common
 {
     [DataContract]
     public class Sample
@@ -20,11 +20,23 @@ namespace Virtuelizacija_Projekat.Common
 
         [DataMember] public double WindAngle { get; set; }
 
-        [DataMember] public DateTime Time { get; set; }
+        [DataMember] public double Time { get; set; }
 
         public Sample() { }
 
-        public Sample(double linearAccelerationX, double linearAccelerationY, double linearAccelerationZ, double windSpeed, double windAngle, DateTime time)
+        public Sample(DronInfo di)
+        : this(
+            di.LinearAccelerationX,
+            di.LinearAccelerationY,
+            di.LinearAccelerationZ,
+            di.WindSpeed,
+            di.WindAngle,
+            di.Time)
+        {
+            
+        }
+
+        public Sample(double linearAccelerationX, double linearAccelerationY, double linearAccelerationZ, double windSpeed, double windAngle, double time)
         {
             LinearAccelerationX = linearAccelerationX;
             LinearAccelerationY = linearAccelerationY;

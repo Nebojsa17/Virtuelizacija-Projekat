@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ServiceModel;
 
 namespace Drone_Server
 {
@@ -10,6 +11,14 @@ namespace Drone_Server
     {
         static void Main(string[] args)
         {
+            ServiceHost host = new ServiceHost(typeof(DroneService));
+            host.Open();
+
+            Console.WriteLine("Service is open, press any key to close it.");
+            Console.ReadKey();
+
+            host.Close();
+            Console.WriteLine("Service is closed");
         }
     }
 }

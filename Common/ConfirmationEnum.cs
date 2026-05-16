@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Virtuelizacija_Projekat.Common
+namespace Common
 {
     [DataContract]
     public enum ConfirmationEnum
