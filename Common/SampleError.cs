@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 namespace Common
 {
     [DataContract]
-    public class MetaHeader
+    public class SampleError
     {
-        [DataMember] public string[] Header { get; set; } // ostavila prazan niz po dogovoru
+        [DataMember]
+        public string Message { get; set; }
     }
 }

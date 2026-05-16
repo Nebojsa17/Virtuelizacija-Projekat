@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 
-namespace Virtuelizacija_Projekat.Common
+namespace Common
 {
     public class FileMenagment
     {

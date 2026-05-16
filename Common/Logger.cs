@@ -4,12 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace Virtuelizacija_Projekat.Common
+namespace Common
 {
-    public class Logger
+    public class Logger : IDisposable
     {
         private string path;
+        private bool disposed = false;
+        private TextWriter textWriter;
 
         public Logger(string path) 
         {
@@ -36,11 +39,34 @@ namespace Virtuelizacija_Projekat.Common
         {
             if (path.Length == 0) return;
 
-            using (StreamWriter sw = new StreamWriter(path, append: true))
+            textWriter = File.AppendText(path);
+            textWriter.WriteLine($"Logged: {DateTime.Now,-25} Message: {message}");
+            textWriter.Close();
+        }
+
+        ~Logger()
+        {
+            Dispose(false);
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
             {
-                sw.WriteLine($"Logged: {DateTime.Now,-25} Message: {message}");
-                sw.Close();
-                sw.Dispose();
+                if (disposing)
+                {
+                    if (textWriter != null)
+                    {
+                        textWriter.Dispose();
+                        textWriter = null;
+                    }
+                }
+                disposed = true;
             }
         }
     }

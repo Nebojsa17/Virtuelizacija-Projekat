@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
-using System.Configuration;
 
-namespace Virtuelizacija_Projekat.Common
+namespace Common
 {
     public class CSVManagment
     {
@@ -22,30 +23,41 @@ namespace Virtuelizacija_Projekat.Common
             this.logger = log;
         }
 
-        public void Obradi() 
+        public void Proccess(IDroneService proxy) 
         {
             int rows = 0;
 
             foreach (var line in File.ReadLines(path))
             {
                 rows++;
+                //preskacemo prvi row zato sto je tu zaglavlje lol
                 if (rows <= 1) continue;
-                if (rows > maxRows) break;
+                if (rows > maxRows+1) 
+                {
+                    logger.Log($"owerflow of rows: {rows}, in file {path}");
+                    continue;
+                }
 
                 if (string.IsNullOrWhiteSpace(line))
                 {   
-                    logger.Log($"row {rows,-4} in file {path,-20} is not in valid format");
+                    logger.Log($"row {rows} in file {path} is not in valid format.");
                     continue;
                 }
                 try 
                 {
                     DronInfo row = new DronInfo(line);
-                    Console.WriteLine($"loaded row {rows-1} - {row.Time}");
+                    ProgressEnum progress = proxy.PushSample(new Sample(row));
+                    Console.WriteLine($"loaded row {rows-1} - {row.Time}: service state in: "+progress);
                 }
-                catch (Exception ex)
+                catch (FaultException<SampleError> ex)
                 {
-                    //los formatiran red !!!!
-                    logger.Log($"row {rows,-4} in file {path,-20} is not valid. Recieved error: {ex}");
+                    // validation error !!!!
+                    logger.Log($"row {rows} in file {path} failed validation, error: {ex.Message} ");
+                }
+                catch
+                {
+                    // los formatiran red !!!!
+                    logger.Log($"row {rows} in file {path} is not in valid format.");
                 }
             }
         }

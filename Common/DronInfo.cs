@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Virtuelizacija_Projekat.Common
+namespace Common
 {
     public class DronInfo
     {
