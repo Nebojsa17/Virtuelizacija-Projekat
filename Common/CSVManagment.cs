@@ -60,7 +60,6 @@ namespace Common
                 {
                     // los formatiran red !!!!
                     logger.Log($"row {rows} in file {path} is not in valid format.");
-                    rows--;
                 }
             }
         }
