@@ -27,39 +27,43 @@ namespace Common
         public void Proccess(IDroneService proxy) 
         {
             int rows = 0;
-
-            foreach (var line in File.ReadLines(path))
+            ProgressEnum progress = ProgressEnum.IN_PROGRESS;
+            using (StreamReader reader = new StreamReader(path))
             {
-                rows++;
-                //preskacemo prvi row zato sto je tu zaglavlje lol
-                if (rows <= 1) continue;
-                if (rows > maxRows+1) 
-                {
-                    logger.Log($"owerflow of rows: {rows}, in file {path}");
-                    continue;
-                }
+                string line;
 
-                if (string.IsNullOrWhiteSpace(line))
-                {   
-                    logger.Log($"row {rows} in file {path} is not in valid format.");
-                    continue;
-                }
-                try 
+                while ((line = reader.ReadLine()) != null)
                 {
-                    DronInfo row = new DronInfo(line);
-                    ProgressEnum progress = proxy.PushSample(new Sample(row));
-                    Console.WriteLine($"loaded row {rows-1,-4}\t service state: "+ progress);
-                }
-                catch (FaultException<SampleError> ex)
-                {
-                    // validation error !!!!
-                    logger.Log($"row {rows} in file {path} failed validation, error: {ex.Detail.Message} at columb {ex.Detail.Column} ");
-                    //rows--;
-                }
-                catch
-                {
-                    // los formatiran red !!!!
-                    logger.Log($"row {rows} in file {path} is not in valid format.");
+                    rows++;
+                    //preskacemo prvi row zato sto je tu zaglavlje lol
+                    if (rows <= 1) continue;
+                    if (rows > maxRows + 1 || progress == ProgressEnum.COMPLETED)
+                    {
+                        logger.Log($"owerflow of rows: {rows}, in file {path}");
+                        continue;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        logger.Log($"row {rows} in file {path} is not in valid format.");
+                        continue;
+                    }
+                    try
+                    {
+                        DronInfo row = new DronInfo(line);
+                        progress = proxy.PushSample(new Sample(row));
+                        Console.WriteLine($"loaded row {rows - 1,-4}\t service state: " + progress);
+                    }
+                    catch (FaultException<SampleError> ex)
+                    {
+                        // validation error !!!!
+                        logger.Log($"row {rows} in file {path} failed validation, error: {ex.Detail.Message} at columb {ex.Detail.Column} ");
+                    }
+                    catch
+                    {
+                        // los formatiran red !!!!
+                        logger.Log($"row {rows} in file {path} is not in valid format.");
+                    }
                 }
             }
         }
