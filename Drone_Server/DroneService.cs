@@ -38,7 +38,7 @@ namespace Drone_Server
             catch (FaultException<SampleError> er) 
             {
                 Console.WriteLine($"recieved sample [{recievedSamplesCnt}/{MaxRead}]\t has error: {er.Detail.Message} at column {er.Detail.Column}");
-                throw er;
+                throw;
             }
 
             Console.WriteLine($"recieved sample [{recievedSamplesCnt}/{MaxRead}]");

@@ -53,8 +53,8 @@ namespace Common
                 catch (FaultException<SampleError> ex)
                 {
                     // validation error !!!!
-                    logger.Log($"row {rows} in file {path} failed validation, error: {ex.Message} ");
-                    rows--;
+                    logger.Log($"row {rows} in file {path} failed validation, error: {ex.Detail.Message} at columb {ex.Detail.Column} ");
+                    //rows--;
                 }
                 catch
                 {
