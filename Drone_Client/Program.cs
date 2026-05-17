@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Configuration;
 using Common;
 using System.ServiceModel;
+using System.IO;
 
 namespace Drone_Client
 {
@@ -13,7 +14,6 @@ namespace Drone_Client
     {
         //za rad sa datotekama
         private static FileMenagment files;
-        private static Logger logger;
 
         //promenljive iz appconfig
         private static string flightsPath;
@@ -37,7 +37,6 @@ namespace Drone_Client
             meta = ConfigurationManager.AppSettings["meta"].Split(',');
 
             //objekti potrebni za rad
-            logger = new Logger(loggerPath);
             files = new FileMenagment(flightsPath);
 
             int menuRespone = 0;
@@ -66,17 +65,18 @@ namespace Drone_Client
             } while (menuRespone != 3);
         }
 
-        public static void FileProccessing(IDroneService proxy) 
+        public static void FileProccessing(IDroneService proxy)
         {
             int row = -1;
 
-            do {
+            do
+            {
                 Console.Write("Input file index: ");
-                try 
+                try
                 {
                     row = int.Parse(Console.ReadLine());
                 }
-                catch  
+                catch
                 {
                     row = -1;
                 }
@@ -84,18 +84,28 @@ namespace Drone_Client
 
             ConfirmationEnum conf = proxy.StartSession(new MetaHeader { Header = meta });
 
-            switch (conf) 
+            switch (conf)
             {
                 case ConfirmationEnum.ACK:
-                    CSVManagment csvManager = new CSVManagment(files.Files[row - 1], maxRows, logger);
-                    csvManager.Proccess(proxy);
+                    CSVManagment csvManager = new CSVManagment(files.Files[row - 1], maxRows, loggerPath);
+                    
+                    try
+                    {
+                        csvManager.Proccess(proxy);
+                    }
+                    catch (IOException)
+                    {
+                        Console.WriteLine($"neuspesno otvaranje fajla: {files.Files[row - 1]}");
+                        csvManager.Dispose();
+                    }
+
+                    proxy.EndSession();
                     break;
                 case ConfirmationEnum.NACK:
                     Console.WriteLine("\nService didn't acknowledge start of session :(");
                     break;
             }
 
-            proxy.EndSession();
             Console.WriteLine("\nAll done!!!!\nPress any to continue...");
             Console.ReadKey();
         }

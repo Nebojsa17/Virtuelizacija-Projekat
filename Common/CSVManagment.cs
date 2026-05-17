@@ -10,17 +10,18 @@ using System.Threading.Tasks;
 
 namespace Common
 {
-    public class CSVManagment
+    public class CSVManagment: IDisposable
     {
         string path;
         int maxRows;
+        private bool disposed = false;
         private Logger logger;
 
-        public CSVManagment(string path, int rows, Logger log) 
+        public CSVManagment(string path, int rows, string logPath) 
         {
             this.path = path;
             this.maxRows = rows;
-            this.logger = log;
+            this.logger = new Logger(logPath);
         }
 
         public void Proccess(IDroneService proxy) 
@@ -47,18 +48,48 @@ namespace Common
                 {
                     DronInfo row = new DronInfo(line);
                     ProgressEnum progress = proxy.PushSample(new Sample(row));
-                    Console.WriteLine($"loaded row {rows-1} - {row.Time}: service state in: "+progress);
+                    Console.WriteLine($"loaded row {rows-1,-4}\t service state: "+ progress);
                 }
                 catch (FaultException<SampleError> ex)
                 {
                     // validation error !!!!
                     logger.Log($"row {rows} in file {path} failed validation, error: {ex.Message} ");
+                    rows--;
                 }
                 catch
                 {
                     // los formatiran red !!!!
                     logger.Log($"row {rows} in file {path} is not in valid format.");
+                    rows--;
                 }
+            }
+        }
+
+        ~CSVManagment()
+        {
+            Dispose(false);
+        }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                Console.WriteLine("Disposing CSVMANAGMENT object!!!");
+
+                if (disposing)
+                {
+                    if (logger != null)
+                    {
+                        logger.Dispose();
+                        logger = null;
+                    }
+                }
+                disposed = true;
             }
         }
     }

@@ -12,5 +12,8 @@ namespace Common
     {
         [DataMember]
         public string Message { get; set; }
+
+        [DataMember]
+        public string Column { get; set; }
     }
 }
