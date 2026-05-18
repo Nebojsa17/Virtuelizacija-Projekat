@@ -65,7 +65,7 @@ namespace Common
                 return files;
             }
 
-            files = Directory.GetFiles(directoryPath);
+            files = Directory.GetFiles(directoryPath).OrderBy(f => int.Parse(Path.GetFileNameWithoutExtension(f))).ToArray();
 
             return files;
         }

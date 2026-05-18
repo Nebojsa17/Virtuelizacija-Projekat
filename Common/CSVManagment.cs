@@ -48,6 +48,7 @@ namespace Common
                         logger.Log($"row {rows} in file {path} is not in valid format.");
                         continue;
                     }
+
                     try
                     {
                         DronInfo row = new DronInfo(line);
@@ -57,7 +58,7 @@ namespace Common
                     catch (FaultException<SampleError> ex)
                     {
                         // validation error !!!!
-                        logger.Log($"row {rows} in file {path} failed validation, error: {ex.Detail.Message} at columb {ex.Detail.Column} ");
+                        logger.Log($"row {rows} in file {path} failed validation, error: {ex.Detail.Message} at column {ex.Detail.Column} ");
                     }
                     catch
                     {

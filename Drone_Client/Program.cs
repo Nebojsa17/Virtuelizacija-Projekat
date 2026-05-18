@@ -23,7 +23,7 @@ namespace Drone_Client
 
         static void Main(string[] args)
         {
-            Console.Write("Press any to start..... ");
+            Console.Write("Press any key to start..... ");
             Console.ReadLine();
 
             //veza sa servisom
@@ -48,7 +48,7 @@ namespace Drone_Client
                 {
                     case 1:
                         files.PrintAvailableFiles();
-                        Console.WriteLine("\nPress any to continue...");
+                        Console.WriteLine("\nPress any key to continue...");
                         Console.ReadKey();
                         break;
                     case 2:
@@ -56,7 +56,7 @@ namespace Drone_Client
                         else
                         {
                             Console.WriteLine("\nNo rows for processing");
-                            Console.WriteLine("\nPress any to continue...");
+                            Console.WriteLine("\nPress any key to continue...");
                             Console.ReadKey();
                         }
                         break;
@@ -95,7 +95,7 @@ namespace Drone_Client
                     }
                     catch (IOException)
                     {
-                        Console.WriteLine($"neuspesno otvaranje fajla: {files.Files[row - 1]}");
+                        Console.WriteLine($"Could not open file: {files.Files[row - 1]}");
                         csvManager.Dispose();
                     }
 
@@ -106,7 +106,7 @@ namespace Drone_Client
                     break;
             }
 
-            Console.WriteLine("\nAll done!!!!\nPress any to continue...");
+            Console.WriteLine("\nAll done!!!!\nPress any key to continue...");
             Console.ReadKey();
         }
 
