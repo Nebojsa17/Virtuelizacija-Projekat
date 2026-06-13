@@ -39,9 +39,23 @@ namespace Common
         {
             if (path.Length == 0) return;
 
-            textWriter = File.AppendText(path);
-            textWriter.WriteLine($"Logged: {DateTime.Now,-25} Message: {message}");
-            textWriter.Close();
+            try
+            {
+                textWriter = File.AppendText(path);
+                
+                textWriter.WriteLine($"Logged: {DateTime.Now,-25} Message: {message}");
+                textWriter.Close();
+                textWriter.Dispose();
+                
+            }
+            catch 
+            {
+                if (textWriter != null)
+                {
+                    textWriter.Close();
+                    textWriter.Dispose();
+                }
+            }
         }
 
         ~Logger()
@@ -58,6 +72,7 @@ namespace Common
         {
             if (!disposed)
             {
+                Console.WriteLine("Disposing LOGGER object!!!");
                 if (disposing)
                 {
                     if (textWriter != null)
