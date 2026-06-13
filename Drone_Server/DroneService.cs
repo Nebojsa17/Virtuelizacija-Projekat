@@ -24,11 +24,13 @@ namespace Drone_Server
         public static double dA;
         public static double Weffect;
 
+        public static DroneEventPublisher droneEvents;
+
         public ConfirmationEnum EndSession()
         {
             if(!inSession) return ConfirmationEnum.NACK;
 
-            Console.WriteLine("Session ended!!!");
+            droneEvents.EndTransfer();
             inSession = false;
             return ConfirmationEnum.ACK;
         }
@@ -43,17 +45,17 @@ namespace Drone_Server
 
             recievedSamplesCnt++;
 
+            droneEvents.Recieved(recievedSamplesCnt, MaxRead);
+
             try
             {
                 Validate(sample);
             }
             catch (FaultException<SampleError> er) 
             {
-                Console.WriteLine($"recieved sample [{recievedSamplesCnt}/{MaxRead}]\t has error: {er.Detail.Message} at column {er.Detail.Column}");
+                droneEvents.Warning($"sample error [{recievedSamplesCnt}/{MaxRead}]\t has error: {er.Detail.Message} at column {er.Detail.Column}");
                 throw;
             }
-
-            Console.WriteLine($"recieved sample [{recievedSamplesCnt}/{MaxRead}]");
 
             bool invalid = Analytics(sample);
 
@@ -90,7 +92,8 @@ namespace Drone_Server
         {
             if (inSession) return ConfirmationEnum.NACK;
 
-            Console.WriteLine("Session started!!!");
+            droneEvents.StartTransfer();
+
             recievedSamplesCnt = 0;
             inSession = true;
 
@@ -155,19 +158,19 @@ namespace Drone_Server
 
             if (dA > Athreshold)
             {
-                // ovde podici odgovarajuci dogadjaj
+                droneEvents.AccelerationSpike();
                 invalid = true;
             }
 
             if (Weffect > Wthreshold)
             {
-                // ovde podici odgovarajuci dogadjaj
+                droneEvents.WindSpike(); 
                 invalid = true;
             }
 
             if (Anorm < (1 - Deviation) * Amean || Anorm > (1 + Deviation) * Amean)
             {
-                // ovde podici odgovarajuci dogadjaj
+                droneEvents.OutOfBandWarning();
                 invalid = true;
             }
 
