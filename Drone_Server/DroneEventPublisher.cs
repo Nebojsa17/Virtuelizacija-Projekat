@@ -36,15 +36,15 @@ namespace Drone_Server
         {
             if(OnWarningRaised != null) OnWarningRaised.Invoke(this, new DroneLogEventArgs(warning));
         }
-        public void AccelerationSpike()
+        public void AccelerationSpike(string type)
         {
             if (OnAccelerationSpike != null) OnAccelerationSpike.Invoke(this, EventArgs.Empty);
         }
-        public void OutOfBandWarning()
+        public void OutOfBandWarning(string type)
         {
             if (OnOutOfBandWarning != null) OnOutOfBandWarning.Invoke(this, EventArgs.Empty);
         }
-        public void WindSpike()
+        public void WindSpike(string type)
         {
             if (OnWindSpike != null) OnWindSpike.Invoke(this, EventArgs.Empty);
         }
