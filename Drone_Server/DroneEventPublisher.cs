@@ -9,8 +9,6 @@ namespace Drone_Server
 {
     public class DroneEventPublisher
     {
-        public static DroneEventPublisher eventPublisher = new DroneEventPublisher();
-
         public delegate void DroneLogEventHandler(object sender, DroneLogEventArgs e);
         public delegate void DroneLogBaseEventHandler(object sender, EventArgs e);
 
