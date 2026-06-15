@@ -12,6 +12,18 @@ namespace Drone_Server
     {
         static void Main(string[] args)
         {
+            DroneEventPublisher publisher = new DroneEventPublisher();
+            DroneService.droneEvents = publisher;
+            DroneFunctions droneFunctions = new DroneFunctions();
+
+            publisher.OnTransferStarted += droneFunctions.OnStartSession;
+            publisher.OnTransferCompleted += droneFunctions.OnEndSession;
+            publisher.OnSampleReceived += droneFunctions.OnRecieveSample;
+            publisher.OnWarningRaised += droneFunctions.OnErrorSample;
+            publisher.OnAccelerationSpike += droneFunctions.OnAccelerationSpike;
+            publisher.OnOutOfBandWarning += droneFunctions.OnOutOfBandWarning;
+            publisher.OnWindSpike += droneFunctions.OnWindSpike;
+
             ServiceHost host = new ServiceHost(typeof(DroneService));
             host.Open();
 

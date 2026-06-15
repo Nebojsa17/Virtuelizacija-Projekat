@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Common
@@ -54,6 +55,7 @@ namespace Common
                         DronInfo row = new DronInfo(line);
                         progress = proxy.PushSample(new Sample(row));
                         Console.WriteLine($"loaded row {rows - 1,-4}\t service state: " + progress);
+                        Thread.Sleep(60);
                     }
                     catch (FaultException<SampleError> ex)
                     {
