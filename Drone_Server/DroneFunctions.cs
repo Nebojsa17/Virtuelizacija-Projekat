@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,11 @@ namespace Drone_Server
 {
     public class DroneFunctions
     {
-        public DroneFunctions() { }
+        Logger log;
+        public DroneFunctions() 
+        {
+            log = new Logger("Logs/drone_flight_spikes.txt");
+        }
 
         public void OnStartSession(object sender, EventArgs e)
         {
@@ -29,17 +34,59 @@ namespace Drone_Server
         {
             Console.WriteLine(e.LogMessage);
         }
-        public void OnAccelerationSpike(object sender, EventArgs e)
+        public void OnAccelerationSpike(object sender, DroneLogEventArgs e)
         {
-            Console.WriteLine("The drone is moving way to fast!!!");
+            switch (e.Direction) 
+            {
+                case Direction.LOW:
+                    Console.WriteLine("The drone suddenly slowed down!");
+                    log.Log("The drone suddenly slowed down!");
+                    break;
+                case Direction.HIGH:
+                    Console.WriteLine("The drone suddenly accelerated!");
+                    log.Log("The drone suddenly accelerated!");
+                    break;
+                default:
+                    Console.WriteLine("The drone's movements are too sudden!");
+                    log.Log("The drone's movements are too sudden!");
+                    break;
+            }
         }
-        public void OnOutOfBandWarning(object sender, EventArgs e)
+        public void OnOutOfBandWarning(object sender, DroneLogEventArgs e)
         {
-            Console.WriteLine("Spead ot of mean!!!");
+            switch (e.Direction)
+            {
+                case Direction.LOW:
+                    Console.WriteLine("Low divirging speed!");
+                    log.Log("Low divirging speed!");
+                    break;
+                case Direction.HIGH:
+                    Console.WriteLine("High divirging speed!");
+                    log.Log("High divirging speed!");
+                    break;
+                default:
+                    Console.WriteLine("Divirging speed!");
+                    log.Log("Divirging speed!");
+                    break;
+            }
         }
-        public void OnWindSpike(object sender, EventArgs e)
+        public void OnWindSpike(object sender, DroneLogEventArgs e)
         {
-            Console.WriteLine("Wind is blowing hard!!!");
+            switch (e.Direction)
+            {
+                case Direction.LOW:
+                    Console.WriteLine("Slow wind!");
+                    log.Log("Slow wind!");
+                    break;
+                case Direction.HIGH:
+                    Console.WriteLine("High wind!");
+                    log.Log("High wind!");
+                    break;
+                default:
+                    Console.WriteLine("Wind!");
+                    log.Log("Wind!");
+                    break;
+            }
         }
     }
 }

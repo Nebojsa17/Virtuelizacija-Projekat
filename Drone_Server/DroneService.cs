@@ -158,34 +158,34 @@ namespace Drone_Server
 
             if (dA > Athreshold)
             {
-                droneEvents.AccelerationSpike("high");
+                droneEvents.AccelerationSpike(Direction.HIGH);
                 invalid = true;
             }
             else if (dA < -Athreshold)
             {
-                droneEvents.AccelerationSpike("low");
+                droneEvents.AccelerationSpike(Direction.LOW);
                 invalid = true;
             }
 
             if (Weffect > Wthreshold)
             {
-                droneEvents.WindSpike("high");
+                droneEvents.WindSpike(Direction.HIGH);
                 invalid = true;
             }
             else if (Weffect < -Wthreshold)
             {
-                droneEvents.WindSpike("low");
+                droneEvents.WindSpike(Direction.LOW);
                 invalid = true;
             }
 
             if (Anorm < (1 - Deviation) * Amean)
             {
-                droneEvents.OutOfBandWarning("low");
+                droneEvents.OutOfBandWarning(Direction.LOW);
                 invalid = true;
             }
             else if (Anorm > (1 + Deviation) * Amean)
             {
-                droneEvents.OutOfBandWarning("high");
+                droneEvents.OutOfBandWarning(Direction.HIGH);
                 invalid = true;
             }
 

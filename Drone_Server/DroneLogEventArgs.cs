@@ -7,26 +7,21 @@ using System.Threading.Tasks;
 
 namespace Drone_Server
 {
+    public enum Direction { LOW, HIGH }
     public class DroneLogEventArgs : EventArgs
     {
         public string LogMessage { get; }
         public int Max { get; }
         public int Recieved { get; }
-        public DroneLogEventArgs(string eventMessage)
-        {
-            LogMessage = eventMessage;
-        }
-        public DroneLogEventArgs(int max, int recieved)
-        {
-            Recieved = recieved;
-            Max = max;
-        }
-        public DroneLogEventArgs(string eventMessage, int max, int recieved)
+        public Direction Direction { get; }
+        public DroneLogEventArgs(string eventMessage = "", int max = 0, int recieved = 0, Direction direction = Direction.LOW)
         {
             LogMessage = eventMessage;
 
             Recieved = recieved;
             Max = max;
+
+            Direction = direction;
         }
     }
 }
