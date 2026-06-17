@@ -40,15 +40,15 @@ namespace Drone_Server
             {
                 case Direction.LOW:
                     Console.WriteLine("The drone suddenly slowed down!");
-                    log.Log("The drone suddenly slowed down!");
+                    log.Log("The drone suddenly slowed down! At sample: " + e.Recieved);
                     break;
                 case Direction.HIGH:
                     Console.WriteLine("The drone suddenly accelerated!");
-                    log.Log("The drone suddenly accelerated!");
+                    log.Log("The drone suddenly accelerated! At sample: " + e.Recieved);
                     break;
                 default:
                     Console.WriteLine("The drone's movements are too sudden!");
-                    log.Log("The drone's movements are too sudden!");
+                    log.Log("The drone's movements are too sudden! At sample: " + e.Recieved);
                     break;
             }
         }
@@ -58,15 +58,15 @@ namespace Drone_Server
             {
                 case Direction.LOW:
                     Console.WriteLine("Low divirging speed!");
-                    log.Log("Low divirging speed!");
+                    log.Log("Low divirging speed! At sample: " + e.Recieved);
                     break;
                 case Direction.HIGH:
                     Console.WriteLine("High divirging speed!");
-                    log.Log("High divirging speed!");
+                    log.Log("High divirging speed! At sample: " + e.Recieved);
                     break;
                 default:
                     Console.WriteLine("Divirging speed!");
-                    log.Log("Divirging speed!");
+                    log.Log("Divirging speed! At sample: " + e.Recieved);
                     break;
             }
         }
@@ -76,15 +76,15 @@ namespace Drone_Server
             {
                 case Direction.LOW:
                     Console.WriteLine("Slow wind!");
-                    log.Log("Slow wind!");
+                    log.Log("Slow wind! At sample: " + e.Recieved);
                     break;
                 case Direction.HIGH:
                     Console.WriteLine("High wind!");
-                    log.Log("High wind!");
+                    log.Log("High wind! At sample: " + e.Recieved);
                     break;
                 default:
                     Console.WriteLine("Wind!");
-                    log.Log("Wind!");
+                    log.Log("Wind! At sample: " + e.Recieved);
                     break;
             }
         }

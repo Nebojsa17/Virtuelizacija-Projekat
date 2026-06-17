@@ -37,6 +37,7 @@ namespace Drone_Server
 
         public ProgressEnum PushSample(Sample sample)
         {
+            Console.WriteLine("Transfer started....");
             var reportsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ConfigurationManager.AppSettings["ReportsDirectory"]);
             var measurementsPath = Path.Combine(reportsPath, ConfigurationManager.AppSettings["MeasurementsFile"]);
             var rejectsPath = Path.Combine(reportsPath, ConfigurationManager.AppSettings["RejectsFile"]);
@@ -54,6 +55,7 @@ namespace Drone_Server
             catch (FaultException<SampleError> er) 
             {
                 droneEvents.Warning($"sample error [{recievedSamplesCnt}/{MaxRead}]\t has error: {er.Detail.Message} at column {er.Detail.Column}");
+                Console.WriteLine("Transfer finished....");
                 throw;
             }
 
@@ -77,7 +79,7 @@ namespace Drone_Server
                 }
             }
 
-
+            Console.WriteLine("Transfer finished....");
             if (recievedSamplesCnt >= MaxRead)
             {
                 return ProgressEnum.COMPLETED;
@@ -158,34 +160,34 @@ namespace Drone_Server
 
             if (dA > Athreshold)
             {
-                droneEvents.AccelerationSpike(Direction.HIGH);
+                droneEvents.AccelerationSpike(Direction.HIGH, recievedSamplesCnt);
                 invalid = true;
             }
             else if (dA < -Athreshold)
             {
-                droneEvents.AccelerationSpike(Direction.LOW);
+                droneEvents.AccelerationSpike(Direction.LOW, recievedSamplesCnt);
                 invalid = true;
             }
 
             if (Weffect > Wthreshold)
             {
-                droneEvents.WindSpike(Direction.HIGH);
+                droneEvents.WindSpike(Direction.HIGH, recievedSamplesCnt);
                 invalid = true;
             }
             else if (Weffect < -Wthreshold)
             {
-                droneEvents.WindSpike(Direction.LOW);
+                droneEvents.WindSpike(Direction.LOW, recievedSamplesCnt);
                 invalid = true;
             }
 
             if (Anorm < (1 - Deviation) * Amean)
             {
-                droneEvents.OutOfBandWarning(Direction.LOW);
+                droneEvents.OutOfBandWarning(Direction.LOW, recievedSamplesCnt);
                 invalid = true;
             }
             else if (Anorm > (1 + Deviation) * Amean)
             {
-                droneEvents.OutOfBandWarning(Direction.HIGH);
+                droneEvents.OutOfBandWarning(Direction.HIGH, recievedSamplesCnt);
                 invalid = true;
             }
 
