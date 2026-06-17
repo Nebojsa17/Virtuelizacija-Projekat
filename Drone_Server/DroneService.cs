@@ -8,6 +8,8 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace Drone_Server
 {
@@ -60,22 +62,41 @@ namespace Drone_Server
             }
 
             bool invalid = Analytics(sample);
+            string loggerPath = "Logs/drone_flight_spikes.txt";
 
             if (invalid)
             {
                 if (File.Exists(rejectsPath))
                 {
-                    using (StreamWriter sw = new StreamWriter(rejectsPath, true))
+                    try
                     {
-                        sw.WriteLine($"{sample.LinearAccelerationX},{sample.LinearAccelerationY},{sample.LinearAccelerationZ},{sample.WindSpeed},{sample.WindAngle},{sample.Time},{Anorm},{dA},{Amean},{Weffect}");
+                        using (StreamWriter sw = new StreamWriter(rejectsPath, true))
+                        {
+                            sw.WriteLine($"{sample.LinearAccelerationX},{sample.LinearAccelerationY},{sample.LinearAccelerationZ},{sample.WindSpeed},{sample.WindAngle},{sample.Time},{Anorm},{dA},{Amean},{Weffect}");
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        CSVManagment csvManager = new CSVManagment(loggerPath);
+                        Console.WriteLine($"Could not open file: rejects.csv");
+                        csvManager.Dispose();
                     }
                 }
             }
             else if (File.Exists(measurementsPath))
             {
-                using (StreamWriter sw = new StreamWriter(measurementsPath, true))
+                try
                 {
-                    sw.WriteLine($"{sample.LinearAccelerationX},{sample.LinearAccelerationY},{sample.LinearAccelerationZ},{sample.WindSpeed},{sample.WindAngle},{sample.Time},{Anorm},{dA},{Amean},{Weffect}");
+                    using (StreamWriter sw = new StreamWriter(measurementsPath, true))
+                    {
+                        sw.WriteLine($"{sample.LinearAccelerationX},{sample.LinearAccelerationY},{sample.LinearAccelerationZ},{sample.WindSpeed},{sample.WindAngle},{sample.Time},{Anorm},{dA},{Amean},{Weffect}");
+                    }
+                }
+                catch (IOException)
+                {
+                    CSVManagment csvManager = new CSVManagment(loggerPath);
+                    Console.WriteLine($"Could not open file: measurements_session.csv");
+                    csvManager.Dispose();
                 }
             }
 

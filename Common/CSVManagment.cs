@@ -18,10 +18,17 @@ namespace Common
         private bool disposed = false;
         private Logger logger;
 
+
+
         public CSVManagment(string path, int rows, string logPath) 
         {
             this.path = path;
             this.maxRows = rows;
+            this.logger = new Logger(logPath);
+        }
+
+        public CSVManagment(string logPath)
+        {
             this.logger = new Logger(logPath);
         }
 
@@ -40,7 +47,7 @@ namespace Common
                     if (rows <= 1) continue;
                     if (rows > maxRows + 1 || progress == ProgressEnum.COMPLETED)
                     {
-                        logger.Log($"owerflow of rows: {rows}, in file {path}");
+                        logger.Log($"overflow of rows: {rows}, in file {path}");
                         continue;
                     }
 

@@ -57,16 +57,16 @@ namespace Drone_Server
             switch (e.Direction)
             {
                 case Direction.LOW:
-                    Console.WriteLine("Low divirging speed!");
-                    log.Log("Low divirging speed! At sample: " + e.Recieved);
+                    Console.WriteLine("Low diverging speed!");
+                    log.Log("Low diverging speed! At sample: " + e.Recieved);
                     break;
                 case Direction.HIGH:
-                    Console.WriteLine("High divirging speed!");
-                    log.Log("High divirging speed! At sample: " + e.Recieved);
+                    Console.WriteLine("High diverging speed!");
+                    log.Log("High diverging speed! At sample: " + e.Recieved);
                     break;
                 default:
-                    Console.WriteLine("Divirging speed!");
-                    log.Log("Divirging speed! At sample: " + e.Recieved);
+                    Console.WriteLine("Diverging speed!");
+                    log.Log("Diverging speed! At sample: " + e.Recieved);
                     break;
             }
         }
